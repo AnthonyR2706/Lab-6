@@ -1,1 +1,2 @@
 # Lab-6
+The program will determine the users grade in this Cisc 3130. It wiil ask the student to input their grade for each graded assignment/test, asking them to enter -1 to determine which have not been doen yet. It will then determine the users current grade and if the final has not been taken it will teall teh student the grades they need to get an A. Out of that needed score it will tell the student how much is available from teh final and how much is available from other assignments.  
