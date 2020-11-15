@@ -1,0 +1,148 @@
+package com.company;
+
+import java.util.Scanner;
+
+/**
+ *    Will take user inputted grades to determine the score they currently have in Cisc 3130
+ *    If the Final has not been taken it will determine how many more points are needed to get an A
+ *    @author Anthony Ramanovich
+ *    @version 1.0 , 11/15/20
+ */
+public class GradeCalc {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        String[] work = new String[19];
+        for(int i = 0; i < 8; i++){
+            work[i] = "Practice Problems " + (i + 1);
+        }
+        for(int i = 0; i < 8; i++){
+            work[i + 8] = "Lab " + (i + 1);
+        }
+        for(int i = 0; i < 2; i++){
+            work[i + 16] = "Midterm " + (i + 1);
+        }
+        work[18] = "Final";
+        System.out.println("Please Enter Your Grade For The Following Assignments");
+        System.out.println("If There Is No Grade Enter: -1");
+        Double[] grades = new Double[19];
+        for(int i = 0; i < 19; i++){
+            System.out.println(work[i] + ":");
+            grades[i] = in.nextDouble();
+        }
+        currentGrade(grades, work);
+    }
+    /**
+     * Will determine the current grade the user has.
+     * @param grades The array wth all of the user inputted grades
+     * @param work the array with the names of all the assignments
+     */
+    public static void currentGrade(Double[] grades, String[] work) {
+        double totalPossible = 0;
+        double totalCurrent = 0;
+        String[] workNotDone = new String[19];
+        Double[] workNotDoneGrades = new Double[19];
+        int notDone = 0;
+        if (grades[0] != -1) {
+            totalPossible += 2;
+            totalCurrent += grades[0];
+        } else {
+            workNotDone[notDone] = work[0];
+            workNotDoneGrades[notDone++] = 2.0;
+        }
+        for (int i = 0; i < 7; i++) {
+            if (grades[i + 1] != -1) {
+                totalPossible += 6;
+                totalCurrent += grades[i + 1];
+            } else {
+                workNotDone[notDone] = work[i + 1];
+                workNotDoneGrades[notDone++] = 6.0;
+            }
+        }
+        if (grades[8] != -1) {
+            totalPossible += 1;
+            totalCurrent += grades[8];
+        } else {
+            workNotDone[notDone] = work[8];
+            workNotDoneGrades[notDone++] = 1.0;
+        }
+        for (int i = 0; i < 7; i++) {
+            if (grades[i + 9] != -1) {
+                totalPossible += 2;
+                totalCurrent += grades[i + 9];
+            } else {
+                workNotDone[notDone] = work[i + 9];
+                workNotDoneGrades[notDone++] = 2.0;
+            }
+        }
+        if (grades[16] != -1) {
+            totalPossible += 10;
+            totalCurrent += grades[16];
+        } else {
+            workNotDone[notDone] = work[16];
+            workNotDoneGrades[notDone++] = 10.0;
+        }
+        if (grades[17] != -1) {
+            if (grades[16] == 0) {
+                totalPossible += 10;
+                totalCurrent += 2 * grades[17];
+            } else {
+                totalPossible += 10;
+                totalCurrent += grades[17];
+            }
+        } else if (grades[16] == 0) {
+            workNotDone[notDone] = work[17];
+            workNotDoneGrades[notDone++] = 20.0;
+        } else {
+            workNotDone[notDone] = work[17];
+            workNotDoneGrades[notDone++] = 10.0;
+        }
+        if (grades[18] != -1) {
+            if (grades[17] == 0) {
+                totalPossible += 20;
+                totalCurrent += 2 * grades[18];
+            } else {
+                totalPossible += 20;
+                totalCurrent += grades[18];
+            }
+        } else if (grades[17] == 0){
+            workNotDone[notDone] = work[18];
+            workNotDoneGrades[notDone] = 40.0;
+        } else {
+            workNotDone[notDone] = work[18];
+            workNotDoneGrades[notDone] = 20.0;
+        }
+        System.out.println("Current Grade: " + totalCurrent + "/" + totalPossible + " or " + (totalCurrent / totalPossible) * 100);
+        if(totalCurrent / totalPossible >= .9) {
+            System.out.println("This Is Equivalent To An A");
+        } else if (totalCurrent / totalPossible >= .8){
+            System.out.println("This Is Equivalent To A B");
+        } else if (totalCurrent / totalPossible >= .7){
+            System.out.println("This Is Equivalent To A C");
+        } else if (totalCurrent / totalPossible >= .6){
+            System.out.println("This Is Equivalent To A D");
+        } else {
+            System.out.println("This Is Equivalent To A F");
+        }
+        if(workNotDoneGrades[notDone] >= 20) {
+            neededGrade(totalCurrent, workNotDoneGrades);
+        }
+    }
+    /**
+     * This will be called as long as the final has not been taken. It will tell the user how many more points they need to get an A
+     * @param totalCurrent total points the user currently has
+     * @param workNotDoneGrades An array with the grades for assignments that have not yet been graded
+     */
+    public static void neededGrade(double totalCurrent, Double[] workNotDoneGrades){
+        double notDoneGrades = 0;
+        int amountNotDone = -1;
+        for (int i = 0; i < workNotDoneGrades.length; i++){
+            if(workNotDoneGrades[i] != null){
+                amountNotDone++;
+                notDoneGrades += workNotDoneGrades[i];
+            }
+        }
+        System.out.println("You Need To Get " + (90 - totalCurrent) + " More Points To Get An A");
+        System.out.println("The Final Is Worth " + workNotDoneGrades[amountNotDone] + " Of Those Points");
+        System.out.println("The Rest Of The Assignments Are Worth " + (notDoneGrades - workNotDoneGrades[amountNotDone]) + " Of Those Points");
+    }
+}
